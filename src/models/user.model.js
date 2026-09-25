@@ -1,0 +1,36 @@
+import { ALIVE, defineModel } from './base.js';
+
+export default defineModel(
+  'User',
+  'users',
+  {
+    username: { type: String, required: true },
+    password_hash: { type: String, required: true },
+    password_encrypted: { type: String, default: null },
+    display_name: { type: String, required: true },
+    currency: { type: String, default: 'INR' },
+    language: { type: String, default: 'en' },
+    status: { type: String, enum: ['ACTIVE', 'SUSPENDED'], default: 'ACTIVE' },
+    failed_attempts: { type: Number, default: 0 },
+    login_locked_until: { type: Date, default: null },
+    subscription_expires_at: { type: Date, default: null },
+    country_code: { type: String, default: null },
+    country_source: { type: String, enum: ['GPS', 'MANUAL', 'ADMIN', 'PHONE', null], default: null },
+    country_detected_at: { type: Date, default: null },
+    terms_accepted_at: { type: Date, default: null },
+    referral_code: { type: String, required: true },
+    referred_by: { type: String, default: null },
+    community_early_access: { type: Boolean, default: false },
+    phone: { type: String, default: null },
+    email: { type: String, default: null },
+    phone_verified_at: { type: Date, default: null },
+  },
+  [
+    [{ username: 1 }, { unique: true, partialFilterExpression: ALIVE }],
+    [{ referral_code: 1 }, { unique: true, partialFilterExpression: ALIVE }],
+    [{ phone: 1 }, { unique: true, partialFilterExpression: { ...ALIVE, phone: { $type: 'string' } } }],
+    [{ email: 1 }, { unique: true, partialFilterExpression: { ...ALIVE, email: { $type: 'string' } } }],
+    [{ created_at: -1 }],
+    [{ subscription_expires_at: 1 }],
+  ],
+);
