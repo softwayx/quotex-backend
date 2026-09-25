@@ -18,7 +18,7 @@ export const createApp = () => {
   app.use(cookieParser());
   app.use(pinoHttp({ logger, autoLogging: { ignore: (req) => req.url === '/api/v1/public/health' } }));
 app.get("/", (req, res) => {
-  res.send("server is running on port 55001");
+  res.send("server is running on port 5500 riskquo");
 });
   app.use('/api/v1', routes);
 
