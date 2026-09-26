@@ -23,4 +23,5 @@ export { default as LoginChallenge } from './loginChallenge.model.js';
 export { default as WhatsappSession } from './whatsappSession.model.js';
 export { default as WhatsappAuth } from './whatsappAuth.model.js';
 export { default as MessagingSettings } from './messagingSettings.model.js';
+export { default as Blog } from './blog.model.js';
 export { ALIVE, SINGLETON_ID, lockDoc, toRow } from './base.js';

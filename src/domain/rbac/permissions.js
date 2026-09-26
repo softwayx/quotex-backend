@@ -8,6 +8,7 @@ export const PERMISSIONS = Object.freeze({
   MESSAGING_MANAGE: 'messaging.manage',
   REFERRALS_MANAGE: 'referrals.manage',
   AUDIT_READ: 'audit.read',
+  BLOGS_MANAGE: 'blogs.manage',
 });
 
 const ROLE_PERMISSIONS = {

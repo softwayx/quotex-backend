@@ -17,3 +17,8 @@
 | 13 | 2026-09-24 | Admin role field (`SUPER_ADMIN`) + permission per admin route group. | RBAC rule; every current admin is a super admin, so behaviour is unchanged. |
 | 14 | 2026-09-24 | `src/core` stays in the frontend too (What-If calculator and live cards compute in the browser). The API's copy in `domain/core` is the one that enforces the rules. | Keep the two in sync when a rule changes. |
 | 15 | 2026-09-24 | Default settings documents and the Free Trial / Basic / Pro plans are created by `seeders/defaults.js` on every start (only when missing). | Replaces the SQL migration seeds; never overwrites admin changes. |
+| 16 | 2026-09-26 | Blog stored in MongoDB (`blogs`), written by the super admin (`blogs.manage`). Content HTML is sanitized with sanitize-html on every save; external links get rel="noopener". | One trusted place for content; the website renders it as-is. |
+| 17 | 2026-09-26 | Blog images go to Cloudinary via a signed REST upload (no SDK). Type is checked from the file bytes, max 2 MB. | No local disk on the server/Lambda; Cloudinary resizes and serves images from a CDN. |
+| 18 | 2026-09-26 | A slug changed after first publish is kept in `previous_slugs` and stays reserved; the website redirects it (308). | Old links and Google results keep working. |
+| 19 | 2026-09-26 | Views are counted by `POST /public/blogs/:slug/view` from the reader's browser, not by `GET /public/blogs/:slug`. | The website caches post pages (ISR), so a server GET is not a visit. |
+| 20 | 2026-09-26 | Fixed blog categories (Risk Management, Strategies, Beginner Guides, Hindi). | Stable category URLs (/blog/category/<slug>). Add new ones in `domain/blog/content.js` and `frontend/src/config/blog.js`. |

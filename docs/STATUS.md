@@ -34,3 +34,12 @@ same logic, on MongoDB. The Next app no longer contains backend code: pages call
 - ⬜ Tests for referrals rewards on first payment, community board, WhatsApp admin actions.
 - ⬜ Purge job for old raw trades (`jobs/`).
 - ⬜ Change the Razorpay webhook URL to `/api/v1/webhook/razorpay` when payments go live.
+
+## Blog (2026-09-26)
+- ✅ Model `blogs` (soft delete, unique slug, previous_slugs), sanitize-html, reading time, audit log for create/update/publish/delete.
+- ✅ Public API: GET /public/blogs, /featured, /categories, /sitemap, /:slug (+ related, or { redirectTo }), POST /:slug/view.
+- ✅ Admin API (super admin): GET/POST /admin/blogs, GET/PUT/DELETE /admin/blogs/:id, PATCH /:id/status, POST /upload-image (Cloudinary).
+- ✅ Website revalidation after changes (REVALIDATE_SECRET); failures are only logged.
+- ✅ `npm run seed:blogs`: 6 published posts (1000+ words each, 1 Hindi), idempotent.
+- Verified: backend 157/157 tests (7 blog tests); live run website -> API -> Atlas 33/33 (publish goes live instantly, old slug 308, unpublish 404, draft preview, upload validation).
+- ⬜ Cloudinary keys not set yet, so uploads answer 503 (UPLOAD_UNAVAILABLE).

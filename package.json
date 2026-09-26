@@ -14,7 +14,8 @@
     "test": "cross-env NODE_ENV=test NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest --runInBand",
     "test:unit": "cross-env NODE_ENV=test NODE_OPTIONS=\"--experimental-vm-modules --no-warnings\" jest --selectProjects unit",
     "seed:admin": "node scripts/seed-admin.js",
-    "migrate:from-postgres": "node scripts/migrate-from-postgres.js"
+    "migrate:from-postgres": "node scripts/migrate-from-postgres.js",
+    "seed:blogs": "node scripts/seed-blogs.js"
   },
   "dependencies": {
     "@whiskeysockets/baileys": "^7.0.0-rc14",
@@ -25,10 +26,12 @@
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.2",
+    "multer": "^2.4.0",
     "nodemon": "^3.1.14",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
     "qrcode": "^1.5.4",
+    "sanitize-html": "^2.17.7",
     "zod": "^4.6.5"
   },
   "devDependencies": {

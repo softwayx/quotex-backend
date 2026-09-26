@@ -19,6 +19,13 @@ const schema = z.object({
   APP_ENCRYPTION_KEY: z.string().regex(/^[0-9a-fA-F]{64}$/, 'must be 64 hex characters (32 bytes)'),
   /** Starts the WhatsApp sockets on boot. Off in tests. */
   WHATSAPP_ENABLED: z.stringbool().default(true),
+  /** Shared with the website: the API calls `${SITE_URL}/api/revalidate?secret=...` after blog changes. Empty = skip. */
+  REVALIDATE_SECRET: z.string().optional().default(''),
+  /** Cloudinary account for blog images. Uploads answer 503 until all three are set. */
+  CLOUDINARY_CLOUD_NAME: z.string().optional().default(''),
+  CLOUDINARY_API_KEY: z.string().optional().default(''),
+  CLOUDINARY_API_SECRET: z.string().optional().default(''),
+  CLOUDINARY_FOLDER: z.string().default('riskquo/blog'),
   SEED_ADMIN_USERNAME: z.string().optional(),
   SEED_ADMIN_PASSWORD: z.string().optional(),
 });
