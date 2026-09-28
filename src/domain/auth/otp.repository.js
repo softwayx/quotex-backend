@@ -1,5 +1,5 @@
 import { OTP_SEND_WINDOW_MINUTES } from '../core/index.js';
-import { LoginChallenge, PendingRegistration, toRow } from '../../models/index.js';
+import { PendingRegistration, toRow } from '../../models/index.js';
 
 const windowStart = () => new Date(Date.now() - OTP_SEND_WINDOW_MINUTES * 60_000);
 
@@ -29,17 +29,3 @@ export const findPendingRegistration = async (id) => toRow(await PendingRegistra
 export const bumpPendingAttempts = (id) => PendingRegistration.updateOne({ _id: id }, { $inc: { attempts: 1 } });
 
 export const deletePendingRegistration = (id) => PendingRegistration.softDelete({ _id: id });
-
-export const countRecentChallenges = (userId) =>
-  LoginChallenge.countDocuments({ user_id: userId, created_at: { $gt: windowStart() } });
-
-export const createLoginChallenge = async ({ userId, otpHash, expiresAt }) => {
-  const [row] = await LoginChallenge.create([{ user_id: userId, otp_hash: otpHash, expires_at: expiresAt }]);
-  return row._id;
-};
-
-export const findLoginChallenge = async (id) => toRow(await LoginChallenge.findById(id).lean());
-
-export const bumpChallengeAttempts = (id) => LoginChallenge.updateOne({ _id: id }, { $inc: { attempts: 1 } });
-
-export const consumeChallenge = (id) => LoginChallenge.updateOne({ _id: id }, { $set: { consumed_at: new Date() } });

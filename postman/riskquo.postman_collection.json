@@ -296,34 +296,6 @@
               }
             },
             {
-              "name": "Login verify (email code)",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"challengeId\": \"<uuid>\",\n  \"code\": \"123456\"\n}"
-                },
-                "url": {
-                  "raw": "{{baseUrl}}/user/auth/login/verify",
-                  "host": [
-                    "{{baseUrl}}"
-                  ],
-                  "path": [
-                    "user",
-                    "auth",
-                    "login",
-                    "verify"
-                  ]
-                }
-              }
-            },
-            {
               "name": "Logout",
               "request": {
                 "method": "POST",

@@ -5,15 +5,13 @@ import { Admin, User } from '../../models/index.js';
 import ApiError from '../../utils/apiError.js';
 import { encryptSecret, hmacSha256Hex, safeEqualHex } from '../../utils/crypto.js';
 import { canSendOtp, generateOtp, otpExpiry, otpUsable } from '../core/index.js';
-import { sendOtpEmail } from '../messaging/email.service.js';
 import { sendRegistrationOtp } from '../messaging/whatsapp.service.js';
 import { applyReferralAtSignup } from '../referrals/referrals.service.js';
-import { countryFromPhone, maskEmail, maskPhone } from '../shared/phone.js';
+import { countryFromPhone, maskPhone } from '../shared/phone.js';
 import { findAdminForLogin } from '../users/admins.repository.js';
 import {
   clearFailedLogins,
   createUser,
-  findUserById,
   findUserContactClash,
   findUserForLogin,
   recordFailedLogin,
@@ -110,40 +108,14 @@ export const verifyRegistration = async ({ registrationId, code }, userAgent) =>
   return signedIn(user, userAgent);
 };
 
-/**
- * Checks the password. Users with an email get a code by email and no session yet
- * (`{ otpRequired, challengeId }`); older users without one are signed in directly.
- */
+/** Username + password only: a correct password signs the user in straight away (no email code). */
 export const loginUser = async ({ username, password }, userAgent) => {
   const record = await findUserForLogin(username);
   await authenticate(User, record, password);
   if (record.status !== 'ACTIVE') throw ApiError.forbidden('This account is suspended.');
   await savePasswordCopy(record.id, encryptSecret(password));
-
-  if (record.email) {
-    if (!canSendOtp(await otp.countRecentChallenges(record.id))) throw tooManyAttempts();
-    const code = generateOtp(randomInt);
-    await sendOtpEmail(record.email, code, record.display_name);
-    const challengeId = await otp.createLoginChallenge({ userId: record.id, otpHash: hashOtp(code), expiresAt: otpExpiry() });
-    return { result: { otpRequired: true, challengeId, emailHint: maskEmail(record.email) } };
-  }
   const { token } = await signedIn(record, userAgent);
   return { result: { id: record.id, username: record.username, displayName: record.display_name }, token, language: record.language };
-};
-
-/** Second login step: the emailed code opens the session. */
-export const verifyLoginOtp = async ({ challengeId, code }, userAgent) => {
-  const challenge = await otp.findLoginChallenge(challengeId);
-  const usable = otpUsable(challenge);
-  if (!usable.ok) throw otpFailure(usable.reason);
-  if (!codeMatches(code, challenge.otp_hash)) {
-    await otp.bumpChallengeAttempts(challengeId);
-    throw wrongCode();
-  }
-  await otp.consumeChallenge(challengeId);
-  const user = await findUserById(challenge.user_id);
-  if (!user || user.status !== 'ACTIVE') throw ApiError.forbidden('This account is suspended.');
-  return signedIn(user, userAgent);
 };
 
 export const loginAdmin = async ({ username, password }, userAgent) => {

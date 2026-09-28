@@ -30,6 +30,25 @@ describe('user login', () => {
     expect(me.body.data.plan).toEqual(expect.objectContaining({ planName: 'Free Trial', isTrial: true }));
   });
 
+  it('a user with an email is signed in directly with username + password (no email code)', async () => {
+    const user = await createUser({ email: 'asha@example.com' });
+    const res = await login(user.username);
+    expect(res.status).toBe(200);
+    expect(res.body.data.user).toEqual({ id: user.id, username: user.username, displayName: user.display_name });
+    expect(res.body.data.user.otpRequired).toBeUndefined();
+    expect(cookieOf(res)).toBeTruthy();
+    // The old email-code step no longer exists (unknown /user routes are behind login).
+    expect((await api().post('/api/v1/user/auth/login/verify').send({ challengeId: user.id, code: '123456' })).status).toBe(401);
+  });
+
+  it('logging in with the email address instead of the username fails', async () => {
+    const user = await createUser({ email: 'ravi@example.com' });
+    const res = await login('ravi@example.com');
+    expect(res.status).toBe(401);
+    expect(res.body.error.code).toBe('INVALID_CREDENTIALS');
+    expect((await login(user.username)).status).toBe(200);
+  });
+
   it('uses one message for a wrong password and an unknown user', async () => {
     const user = await createUser();
     const wrong = await login(user.username, 'nope-nope');

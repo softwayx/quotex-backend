@@ -18,15 +18,8 @@ export const registerVerify = async (req, res) => {
 
 export const login = async (req, res) => {
   const { result, token, language } = await service.loginUser(req.body, req.get('user-agent'));
-  if (token) signIn(res, { user: { language }, token });
+  signIn(res, { user: { language }, token });
   ok(res, { user: result });
-};
-
-export const loginVerify = async (req, res) => {
-  const session = await service.verifyLoginOtp(req.body, req.get('user-agent'));
-  signIn(res, session);
-  const { user } = session;
-  ok(res, { user: { id: user.id, username: user.username, displayName: user.display_name } });
 };
 
 export const logout = async (req, res) => {
