@@ -15,7 +15,6 @@ export const categorySlug = (name) => BLOG_CATEGORIES.find((c) => c.name === nam
 /** Public calculator pages a post can link to. */
 export const CALCULATOR_PATHS = Object.freeze([
   '/binary-risk-calculator',
-  '/quotex-risk-calculator',
   '/martingale-calculator',
   '/compounding-calculator',
   '/money-management-plan',
