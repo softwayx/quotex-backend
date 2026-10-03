@@ -21,6 +21,10 @@ export default defineModel(
     focus_keyword: { type: String, default: '' },
     canonical_url: { type: String, default: null },
     faqs: { type: [{ _id: false, question: String, answer: String }], default: [] },
+    /** Optional Hinglish translation shown behind a "Translate to Hinglish" button. */
+    hinglish_title: { type: String, default: '' },
+    hinglish_content: { type: String, default: '' },
+    hinglish_faqs: { type: [{ _id: false, question: String, answer: String }], default: [] },
     related_calculators: { type: [String], default: [] },
     status: { type: String, enum: ['draft', 'published'], default: 'draft' },
     is_featured: { type: Boolean, default: false },

@@ -31,6 +31,13 @@ export const blogSchema = z.object({
     .array(z.object({ question: z.string().trim().min(3).max(200), answer: z.string().trim().min(3).max(1500) }))
     .max(12)
     .default([]),
+  hinglishTitle: z.string().trim().max(160).optional().default(''),
+  hinglishContent: z.string().max(300_000, 'The translation is too long.').optional().default(''),
+  hinglishFaqs: z
+    .array(z.object({ question: z.string().trim().min(3).max(200), answer: z.string().trim().min(3).max(1500) }))
+    .max(12)
+    .optional()
+    .default([]),
   relatedCalculators: z.array(z.enum(CALCULATOR_PATHS)).max(6).default([]),
   isFeatured: z.boolean().default(false),
   authorName: z.string().trim().max(60).optional().default(''),

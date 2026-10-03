@@ -35,6 +35,9 @@ const toPost = (doc) => ({
   ...toCard(doc),
   content: doc.content,
   faqs: doc.faqs,
+  hinglish: doc.hinglish_content
+    ? { title: doc.hinglish_title || doc.title, content: doc.hinglish_content, faqs: doc.hinglish_faqs ?? [] }
+    : null,
   relatedCalculators: doc.related_calculators,
   metaTitle: doc.meta_title,
   metaDescription: doc.meta_description,
@@ -45,7 +48,7 @@ const toPost = (doc) => ({
 
 const toAdmin = (doc) => ({ ...toPost(doc), status: doc.status, previousSlugs: doc.previous_slugs, createdAt: iso(doc.created_at) });
 
-const CARD_FIELDS = '-content -faqs';
+const CARD_FIELDS = '-content -faqs -hinglish_content -hinglish_faqs';
 
 // ---------- public (published only) ----------
 
@@ -155,6 +158,9 @@ const toFields = (input) => {
     focus_keyword: input.focusKeyword ?? '',
     canonical_url: input.canonicalUrl || null,
     faqs: input.faqs,
+    hinglish_title: input.hinglishTitle ?? '',
+    hinglish_content: sanitizeContent(input.hinglishContent ?? ''),
+    hinglish_faqs: input.hinglishFaqs ?? [],
     related_calculators: [...new Set(input.relatedCalculators)],
     is_featured: input.isFeatured,
     author_name: input.authorName || 'RiskQuo Team',
